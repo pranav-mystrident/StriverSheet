@@ -19,8 +19,8 @@ public:
     vector<vector<int>> levelOrder(TreeNode* root) {
 
         
-        vector<vector<int>> ans;
-        queue<TreeNode*> q;
+        vector<vector<int>> ans; //for storing level order values
+        queue<TreeNode*> q; //for accesing and working with their children nodes
         if(root==nullptr) return ans; 
 
         q.push(root);
