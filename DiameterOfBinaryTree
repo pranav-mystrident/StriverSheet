@@ -1,0 +1,67 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxi=0;
+    stack<TreeNode*> s;
+    int diameterOfBinaryTree(TreeNode* root) {
+        
+        if(root==nullptr) return 0;
+        s.push(root);
+
+        int lht=diameterOfBinaryTree(root->left);
+        int rht=diameterOfBinaryTree(root->right);
+
+        maxi=max(maxi,lht+rht);
+        s.pop();
+
+        if(s.empty())
+            return maxi;
+
+        return 1+max(lht,rht);
+    }
+};
+
+MISTAKES:
+
+You mixed height and diameter in the same return value, causing incorrect recursion.
+Used a stack unnecessarily — recursion already handles traversal.
+Used s.empty() inside recursion, making the last call return diameter while others return height → inconsistent.
+diameterOfBinaryTree() calls itself recursively, but it should only compute diameter by calling a separate height function.
+Global maxi is correct, but the function logic to update it is wrong.
+
+
+CORRECT SOLUTION
+
+class Solution {
+public:
+    int maxi=0;
+    
+    int height(TreeNode* root){
+
+        if(root==nullptr) return 0;
+        
+
+        int lht=height(root->left);
+        int rht=height(root->right);
+
+        maxi=max(maxi,lht+rht);
+
+        return 1+max(lht,rht);
+    }
+    
+    int diameterOfBinaryTree(TreeNode* root) {
+        
+        height(root);
+        return maxi;
+    }
+};
