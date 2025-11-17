@@ -1,0 +1,76 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        
+        //We will be doing level order traversal
+        //We will make use of queue for doing, level order traversal as usual
+        //We will store (node,vertical,level) in the custom queue
+
+        queue<pair<TreeNode*,pair<int,int>>> q;
+        
+        //We will make use of a map data structure to store the values after popping off a queue
+        //Queue is used for traversal, map is used for storage of the traversed elements
+        //Few elements may belong to the same level and vertical, leetcode asks them to put them separately in a sorted order, while representing the vertical order traversal
+        //The map shall contain (vertical, level and the multiple nodes present in the same level and vertical)
+        //We shall make use of a nested map to contain the multiple elements in the same level
+        //The elements can have duplicates and they need to be in sorted order,
+        map<int,map<int,multiset<int>>> nodes;
+
+        //So we push our first element into the queue then pop it
+
+        q.push({root,{0,0}});
+        while(!q.empty()){
+
+            //We will collect the front element of the queue and pop it
+            auto p = q.front();
+            q.pop();
+            //We are retrieving the elements present inside the queue and storing it in variables so that it can be stored inside map
+            TreeNode* node=p.first;
+            int x=p.second.first;
+            int y=p.second.second;
+            //Storing inside map named nodes,at vertical x and level y, insert the value of the node
+            nodes[x][y].insert(node->val);
+            //If node's left exists,put it inside the queue by specifying node,vertical and level
+            if(node->left){
+                q.push({node->left,{x-1,y+1}});
+            }
+                //If node's right exists,put it inside the queue by specifying node,vertical and level
+            if(node->right){
+                q.push({node->right,{x+1,y+1}});
+            }
+            //Now this loop will successfully do level order traversal and store the elements inside the map    
+        }
+        //Next Step is to retrieve elements from the map and store in vector of vector so that it can be displayed
+        //For that we create a vector to store each element of map, so that as a whole can be added to vector of vectors
+
+        vector<vector<int>> ans;
+
+        //Traverse the map and add the elements 
+        for(auto p:nodes){
+            //Create a vector to store each element of map, so that as a whole can be added to vector of vectors
+            vector<int>col;
+            for(auto q:p.second){
+            //p points to the map, p.second points to the nested map
+            //We are using the for loop to iterate through the multiset which we have under each level
+
+            col.insert(col.end(),q.second.begin(),q.second.end());
+
+            }
+            ans.push_back(col);
+        }
+
+        return ans;
+
+    }
+};
