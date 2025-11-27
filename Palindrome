@@ -1,0 +1,19 @@
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        long long revn=0;// we set it to long long to check integer overflow conditions
+        int duplicate=x;// we store the original in a variable because we x/10 the original and we need the original later to compare with the reversed value
+        while(x!=0){
+            int lastdigit=x%10;
+            revn=(revn*10)+lastdigit;
+            x=x/10;
+            if(revn>INT_MAX||revn<INT_MIN)
+                return 0;
+            
+        }
+        if(revn==duplicate&&duplicate>=0)// -121 if reversed will give you 121-, but our code originally will tell all the -ve values are palindrome, so to avoid that we do this
+            return true;
+        else
+            return false;
+    }
+};
