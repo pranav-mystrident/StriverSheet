@@ -1,15 +1,16 @@
-#include<iostream>
-using namespace std;
-
-int main(){
-  int revnumber=0;
-  int n;
-  cin>>n;
-  while(n>0){
-    int lastdigit = n%10;
-    n=n/10;
-    revnumber=(revnumber*10)+lastdigit;
-  }
-  cout<<revnumber;
-  return 0;
-}
+class Solution {
+public:
+    
+    int reverse(int x) {
+        long long revn=0; //we are declaring this long long because we need to check whether its gonna overflow integer limits or not
+        while(x!=0){
+            int lastdigit=x%10;
+            revn=(revn*10)+lastdigit;
+            if(revn>INT_MAX||revn<INT_MIN)//checking for integer overflow
+                return 0;
+            x=x/10;
+            
+        }   
+        return (int)revn; //we need to return an integer not a long long
+    }
+};
